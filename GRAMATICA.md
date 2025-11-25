@@ -214,3 +214,135 @@ T_IDENTIFICADOR ":" "real" ";"
     "retorne" T_IDENTIFICADOR ";"
 "fim"
 ```
+
+## Representação Formal da Gramática (Modelo de Chomsky)
+
+A gramática pode ser formalmente representada pela quádrupla **G = (V, T, P, S)**, onde:
+
+### Definição da Quádrupla
+
+#### G = (V, T, P, S)
+
+Onde:
+
+- **V** = Conjunto de símbolos não-terminais (variáveis)
+- **T** = Conjunto de símbolos terminais (tokens)
+- **P** = Conjunto de regras de produção
+- **S** = Símbolo inicial da gramática
+
+### V (Símbolos Não-Terminais)
+
+```plain text
+V = {
+    algoritmo, declaracao_algoritmo, var_decl_block, var_decl, tp_primitivo,
+    stm_block, stm_list, stm_ret, lvalue, stm_attr, stm_se, stm_para,
+    expr, termo, fcall, fargs, literal, func_decl, fvar_decl, fparams, fparam
+}
+```
+
+### T (Símbolos Terminais)
+
+```plain text
+T = {
+    "algoritmo", "variáveis", "fim-variáveis", "início", "fim", "função",
+    "inteiro", "real", "se", "então", "fim-se", "para", "de", "até", "faça",
+    "fim-para", "retorne", ":=", "+", "-", "*", "/", "%", ">", ">=", "<", "<=",
+    "=", "<>", "ou", "||", "e", "&&", "|", "^", "&", "~", "não",
+    "(", ")", ",", ":", ";",
+    T_IDENTIFICADOR, T_INT_LIT, T_STRING_LIT, T_REAL_LIT, EOF
+}
+```
+
+### P (Regras de Produção)
+
+```plain text
+P = {
+    algoritmo → declaracao_algoritmo (var_decl_block)? stm_block (func_decl)* EOF
+    
+    declaracao_algoritmo → "algoritmo" T_IDENTIFICADOR ";"
+    
+    var_decl_block → "variáveis" (var_decl ";")+ "fim-variáveis"
+    
+    var_decl → T_IDENTIFICADOR ":" tp_primitivo
+    
+    tp_primitivo → "inteiro"
+    tp_primitivo → "real"
+    
+    stm_block → "início" (stm_list)* "fim"
+    
+    stm_list → stm_attr
+    stm_list → fcall ";"
+    stm_list → stm_ret
+    stm_list → stm_se
+    stm_list → stm_para
+    
+    stm_ret → "retorne" expr? ";"
+    
+    lvalue → T_IDENTIFICADOR
+    
+    stm_attr → lvalue ":=" expr ";"
+    
+    stm_se → "se" expr "então" (stm_list)+ "fim-se"
+    
+    stm_para → "para" lvalue "de" expr "até" expr "faça" (stm_list)+ "fim-para"
+    
+    expr → expr ("ou"|"||") expr
+    expr → expr ("e"|"&&") expr
+    expr → expr "|" expr
+    expr → expr "^" expr
+    expr → expr "&" expr
+    expr → expr ("="|"<>") expr
+    expr → expr (">"|">="|"<"|"<=") expr
+    expr → expr ("+" | "-") expr
+    expr → expr ("/"|"*"|"%") expr
+    expr → ("+"|"-"|"~"|"não")? termo
+    
+    termo → fcall
+    termo → lvalue
+    termo → literal
+    termo → "(" expr ")"
+    
+    fcall → T_IDENTIFICADOR "(" fargs? ")"
+    
+    fargs → expr ("," expr)*
+    
+    literal → T_STRING_LIT
+    literal → T_INT_LIT
+    literal → T_REAL_LIT
+    
+    func_decl → "função" T_IDENTIFICADOR "(" fparams? ")" (":" tp_primitivo)? fvar_decl stm_block
+    
+    fvar_decl → (var_decl ";")*
+    
+    fparams → fparam ("," fparam)*
+    
+    fparam → T_IDENTIFICADOR ":" tp_primitivo
+}
+```
+
+### S (Símbolo Inicial)
+
+```plain text
+S = algoritmo
+```
+
+### Resumo da Quádrupla
+
+```plain text
+G = (V, T, P, S)
+
+Onde:
+V = {algoritmo, declaracao_algoritmo, var_decl_block, var_decl, tp_primitivo, 
+     stm_block, stm_list, stm_ret, lvalue, stm_attr, stm_se, stm_para, 
+     expr, termo, fcall, fargs, literal, func_decl, fvar_decl, fparams, fparam}
+
+T = {"algoritmo", "variáveis", "fim-variáveis", "início", "fim", "função", 
+     "inteiro", "real", "se", "então", "fim-se", "para", "de", "até", "faça", 
+     "fim-para", "retorne", ":=", "+", "-", "*", "/", "%", ">", ">=", "<", "<=", 
+     "=", "<>", "ou", "||", "e", "&&", "|", "^", "&", "~", "não", 
+     "(", ")", ",", ":", ";", T_IDENTIFICADOR, T_INT_LIT, T_STRING_LIT, T_REAL_LIT, EOF}
+
+S = algoritmo
+
+P = {conjunto de 41 regras de produção conforme especificado acima}
+```
