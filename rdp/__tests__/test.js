@@ -12,11 +12,12 @@ const parser = new Parser();
 
 function test(input, expected) {
     const result = parser.parse(input);
+    const inputWithEscape = input.replace(/\n/g, '\\n');
     try {
         assert.deepStrictEqual(result, expected);
-        console.log(`Test passed: ${input}`);
+        console.log(`Test passed: ${inputWithEscape}`);
     } catch (e) {
-        console.error(`Test failed: ${input}`);
+        console.error(`Test failed: ${inputWithEscape}`);
         console.error(e.message);
     }
 }
