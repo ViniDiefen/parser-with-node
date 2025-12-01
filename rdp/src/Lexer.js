@@ -1,8 +1,40 @@
 const Spec = [
+    // Whitespace (skipped)
     [/^\s+/, null],
+    // Keywords
+    [/^algoritmo\b/, 'algoritmo'],
+    [/^variáveis\b/, 'variáveis'],
+    [/^fim-variáveis\b/, 'fim-variáveis'],
+    [/^início\b/, 'início'],
+    [/^função\b/, 'função'],
+    [/^inteiro\b/, 'inteiro'],
+    [/^real\b/, 'real'],
+    [/^se\b/, 'se'],
+    [/^então\b/, 'então'],
+    [/^para\b/, 'para'],
+    [/^de\b/, 'de'],
+    [/^até/, 'até'],
+    [/^faça\b/, 'faça'],
+    [/^fim-para\b/, 'fim-para'],
+    [/^fim-se\b/, 'fim-se'],
+    [/^fim\b/, 'fim'],
+    [/^retorne\b/, 'retorne'],
+    // Operators and Punctuation
+    [/^:=/, ':='],
+    [/^;/, ';'],
+    [/^:/, ':'],
+    [/^,/, ','],
+    [/^\(/, '('],
+    [/^\)/, ')'],
+    [/^\+/, '+'],
+    [/^>/, '>'],
+    [/^\./, '.'],
+    // Literals
     [/^\d+/, 'T_INT_LIT'],
     [/^"[^"]*"/, 'T_STRING_LIT'],
     [/^'[^']*'/, 'T_STRING_LIT'],
+    // Identifiers
+    [/^[a-zA-Z_][a-zA-Z0-9_]*/, 'T_IDENTIFICADOR'],
 ]
 
 class Lexer {
@@ -14,7 +46,7 @@ class Lexer {
 
     getNextToken() {
         if (!this.hasMoreTokens()) {
-            return null;
+            return { type: 'EOF' };
         }
 
         const string = this._input.slice(this._cursor);

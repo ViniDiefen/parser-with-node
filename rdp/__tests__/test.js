@@ -5,7 +5,14 @@ const assert = require('assert');
  * List of tests
  */
 const tests = [
-    require('./literals-test'),
+    require('./declaracao-variaveis-test'),
+    require('./multiplas-variaveis-test'),
+    require('./stm-attr-test'),
+    require('./fcall-test'),
+    require('./fcall-multiplos-args-test'),
+    require('./stm-se-test'),
+    require('./stm-para-test'),
+    require('./programa-completo-test'),
 ]
 
 const parser = new Parser();
