@@ -356,6 +356,11 @@ class Parser {
         };
     }
 
+    /**
+     * fvar_decl
+     *   : (var_decl ";")*
+     *   ;
+     */
     fvar_decl() {
         const declarations = [];
         while (this._lookahead.type !== 'início') {
