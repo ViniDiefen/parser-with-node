@@ -1,7 +1,7 @@
 const program_sample = `
     algoritmo teste;
     início
-        imprima("Hello World");
+        retorne;
     fim
 `;
 
@@ -14,14 +14,8 @@ module.exports = test => {
         var_decl_block: null,
         stm_block: [
             {
-                type: 'fcall',
-                target: 'imprima',
-                arguments: [
-                    {
-                        type: 'T_STRING_LIT',
-                        value: 'Hello World'
-                    }
-                ]
+                type: 'stm_ret',
+                value: null
             }
         ],
         func_decl_block: [],

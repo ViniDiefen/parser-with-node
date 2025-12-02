@@ -43,6 +43,6 @@ module.exports = test => {
                 ]
             }
         ],
-        func_decl: [],
+        func_decl_block: [],
     });
 }

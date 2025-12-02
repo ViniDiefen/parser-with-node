@@ -27,8 +27,8 @@ module.exports = test => {
                 arguments: [
                     { type: 'T_STRING_LIT', value: 'ok' }
                 ]
-            }
+            },
         ],
-        func_decl: [],
+        func_decl_block: [],
     });
 }

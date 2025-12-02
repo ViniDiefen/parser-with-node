@@ -1,10 +1,7 @@
 const program_sample = `
     algoritmo teste;
-    variáveis
-        x : inteiro;
-    fim-variáveis
     início
-        x := 42;
+        retorne 42;
     fim
 `;
 
@@ -14,16 +11,10 @@ module.exports = test => {
         declaracao_algoritmo: {
             name: 'teste',
         },
-        var_decl_block: [
-            {
-                type: 'inteiro',
-                name: 'x',
-            }
-        ],
+        var_decl_block: null,
         stm_block: [
             {
-                type: 'stm_attr',
-                target: 'x',
+                type: 'stm_ret',
                 value: {
                     type: 'T_INT_LIT',
                     value: 42

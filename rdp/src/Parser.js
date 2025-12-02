@@ -1,3 +1,4 @@
+const { type } = require('os');
 const { Lexer } = require('./Lexer');
 
 class Parser {
@@ -27,7 +28,7 @@ class Parser {
             declaracao_algoritmo: this.declaracao_algoritmo(),
             var_decl_block: this.var_decl_block(),
             stm_block: this.stm_block(),
-            func_decl: this.func_decl(),
+            func_decl_block: this.func_decl_block(),
         };
     }
 
@@ -138,6 +139,8 @@ class Parser {
                         return this.fcall(idToken);
                 }
                 break;
+            case 'retorne':
+                return this.stm_ret();
             case 'se':
                 return this.stm_se();
             case 'para':
@@ -196,6 +199,24 @@ class Parser {
             }
         };
         return args;
+    }
+
+    /**
+     * stm_ret
+     *   : "retorne" expr? ";"
+     *   ;
+     */
+    stm_ret() {
+        this._eat('retorne');
+        let value = null;
+        if (this._lookahead.type !== ';') {
+            value = this.expr();
+        }
+        this._eat(';');
+        return {
+            type: 'stm_ret',
+            value,
+        };
     }
 
     /**
@@ -262,8 +283,86 @@ class Parser {
         }
     }
 
+    /**
+     * func_decl_block
+     *   : (func_decl)*
+     *   ;
+     */
+    func_decl_block() {
+        const declarations = [];
+        while (this._lookahead.type === 'função') {
+            declarations.push(this.func_decl());
+        }
+        return declarations;
+    }
+
+    /**
+     * func_decl
+     *   : "função" T_IDENTIFICADOR "(" fparams? ")" (":" tp_primitivo)? fvar_decl stm_block
+     *   ;
+     */
     func_decl() {
-        return [];
+        this._eat('função');
+        const nameToken = this._eat('T_IDENTIFICADOR');
+        this._eat('(');
+        const fparams = this.fparams();
+        this._eat(')');
+        this._eat(':');
+        const returnType = this.tp_primitivo();
+        this._eat(';');
+        const vars = this.fvar_decl();
+        const stmts = this.stm_block();
+        return {
+            type: 'func_decl',
+            name: nameToken.value,
+            parameters: fparams,
+            returnType: returnType.value,
+            var_decl_block: vars,
+            stm_block: stmts,
+        }
+    }
+
+    /**
+     * fparams
+     *   : fparam ("," fparam)*
+     *   ;
+     */
+    fparams() {
+        const params = [];
+        while (this._lookahead.type !== ')') {
+            const fparam = this.fparam();
+            params.push(fparam);
+            if (this._lookahead.type === ',') {
+                this._eat(',');
+            } else {
+                break;
+            }
+        }
+        return params;
+    }
+
+    /**
+     * fparam
+     *   : T_IDENTIFICADOR ":" tp_primitivo
+     *   ;
+     */
+    fparam() {
+        const name = this._eat('T_IDENTIFICADOR');
+        this._eat(':');
+        const type = this.tp_primitivo();
+        return {
+            name,
+            type,
+        };
+    }
+
+    fvar_decl() {
+        const declarations = [];
+        while (this._lookahead.type !== 'início') {
+            declarations.push(this.var_decl());
+            this._eat(';');
+        }
+        return declarations;
     }
 
     /**
