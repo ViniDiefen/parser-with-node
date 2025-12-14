@@ -6,11 +6,13 @@ Desenvolvido como parte do curso de **Linguagens Formais e Autômatos** da **Fee
 
 ## 📚 Baseado no Conteúdo Educacional
 
-A implementação segue os conceitos e metodologias apresentados no canal educacional:
+A implementação segue os conceitos e metodologias apresentados em:
 
-**[Dmitry Soshnikov - Education](https://www.youtube.com/@DmitrySoshnikov-education)**
+- **[Dmitry Soshnikov - Education](https://www.youtube.com/@DmitrySoshnikov-education)**
+- **[Abstract-Syntax-Tree-Visualization-of-Mathematical-Expressions](https://github.com/shivatejapecheti/Abstract-Syntax-Tree-Visualization-of-Mathematical-Expressions)**
+- **[Análise de Descida Recursiva](https://www.youtube.com/watch?v=SToUyjAsaFk)**
 
-O canal oferece conteúdo aprofundado sobre:
+As fontes oferecem conteúdo aprofundado sobre:
 
 - Construção de parsers
 - Análise sintática (Parsing)
@@ -32,10 +34,10 @@ Este projeto implementa um parser recursivo descendente que:
 
 ## 🔗 Recursos
 
-- **Canal YouTube**: [Dmitry Soshnikov - Education](https://www.youtube.com/@DmitrySoshnikov-education)
+- **Conteúdo educacional**
 - **Técnica**: Recursive Descent Parsing (RDP)
 - **Linguagem**: JavaScript
 
 ---
 
-*Este projeto é uma implementação educacional baseada nos conceitos de compiladores e parsing ensinados por Dmitry Soshnikov.*
+*Este projeto é uma implementação educacional baseada principalmente nos conceitos de compiladores e parsing ensinados por Dmitry Soshnikov.*

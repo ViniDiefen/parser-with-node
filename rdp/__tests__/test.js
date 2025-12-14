@@ -19,13 +19,13 @@ const tests = [
     { name: 'func-decl-multiplos-params-test', test: require('./func-decl-multiplos-params-test') },
     { name: 'func-decl-com-vars-test', test: require('./func-decl-com-vars-test') },
     { name: 'func-decl-multiplas-test', test: require('./func-decl-multiplas-test') },
+    { name: 'math-expressions-test', test: require('./math-expressions-test') },
 ]
 
 const parser = new Parser();
 
 function test(testName) {
     return (input, expected) => {
-        const display = input.replace(/\n/g, '\\n');
         const result = parser.parse(input);
         try {
             assert.deepStrictEqual(result, expected);

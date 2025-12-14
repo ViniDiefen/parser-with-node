@@ -268,19 +268,66 @@ class Parser {
         };
     }
 
-
     expr() {
-        const token = this._lookahead.type;
-        switch (token) {
-            case 'T_IDENTIFICADOR':
-                const idToken = this._eat('T_IDENTIFICADOR');
-                return {
-                    type: 'T_IDENTIFICADOR',
-                    value: idToken.value,
-                };
-            default:
-                return this.literal();
+        return this.expr_e1();
+    }
+
+    expr_e1() {
+        let left = this.expr_e2();
+
+        while (this._lookahead.type === '+' || this._lookahead.type === '-') {
+            const operatorToken = this._lookahead;
+            this._eat(operatorToken.type);
+            const right = this.expr_e2();
+            left = {
+                type: 'binary_expr',
+                operator: operatorToken.type,
+                left,
+                right,
+            };
         }
+        return left;
+    }
+
+    expr_e2() {
+        let left = this.term();
+
+        while (this._lookahead.type === '*' || this._lookahead.type === '/') {
+            const operatorToken = this._lookahead;
+            this._eat(operatorToken.type);
+            const right = this.term();
+            left = {
+                type: 'binary_expr',
+                operator: operatorToken.type,
+                left,
+                right,
+            };
+        }
+        return left;
+    }
+
+    term() {
+        if (this._lookahead.type === 'T_IDENTIFICADOR') {
+            return this._eat('T_IDENTIFICADOR');
+        }
+
+        if (this._lookahead.type === 'T_INT_LIT') {
+            return this.literal();
+        }
+
+        // Suporte a literais de string
+        if (this._lookahead.type === 'T_STRING_LIT') {
+            return this.literal();
+        }
+
+        if (this._lookahead.type === '(') {
+            this._eat('(');
+            const expr = this.expr();
+            this._eat(')');
+            return expr;
+        }
+
+        throw new Error(`Syntax Error: ${this._lookahead.type} not recognized as term`);
     }
 
     /**
