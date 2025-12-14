@@ -268,17 +268,28 @@ class Parser {
         };
     }
 
+    /**
+     * expr
+     *   : expr ("ou"|"||") expr
+     *   | expr ("e"|"&&") expr
+     *   | expr ("=="|"<>") expr
+     *   | expr (">"|">="|"<"|"<=") expr
+     *   | expr ("+" | "-") expr
+     *   | expr ("/"|"*"|"%") expr
+     *   | ("+"|"-"|"~"|"não")? termo
+     *   ;
+     */
     expr() {
-        return this.expr_e1();
+        return this.expr_ou();
     }
 
-    expr_e1() {
-        let left = this.expr_e2();
+    expr_ou() {
+        let left = this.expr_e();
 
-        while (this._lookahead.type === '+' || this._lookahead.type === '-') {
+        while (["ou", "||"].includes(this._lookahead.type)) {
             const operatorToken = this._lookahead;
             this._eat(operatorToken.type);
-            const right = this.expr_e2();
+            const right = this.expr_e();
             left = {
                 type: 'binary_expr',
                 operator: operatorToken.type,
@@ -289,13 +300,13 @@ class Parser {
         return left;
     }
 
-    expr_e2() {
-        let left = this.term();
+    expr_e() {
+        let left = this.expr_eq();
 
-        while (this._lookahead.type === '*' || this._lookahead.type === '/') {
+        while (["e", "&&"].includes(this._lookahead.type)) {
             const operatorToken = this._lookahead;
             this._eat(operatorToken.type);
-            const right = this.term();
+            const right = this.expr_eq();
             left = {
                 type: 'binary_expr',
                 operator: operatorToken.type,
@@ -306,27 +317,106 @@ class Parser {
         return left;
     }
 
+    expr_eq() {
+        let left = this.expr_rel();
+
+        while (['==', '<>'].includes(this._lookahead.type)) {
+            const operatorToken = this._lookahead;
+            this._eat(operatorToken.type);
+            const right = this.expr_rel();
+            left = {
+                type: 'binary_expr',
+                operator: operatorToken.type,
+                left,
+                right,
+            };
+        }
+        return left;
+    }
+
+    expr_rel() {
+        let left = this.expr_add();
+
+        while (['<', '<=', '>', '>='].includes(this._lookahead.type)) {
+            const operatorToken = this._lookahead;
+            this._eat(operatorToken.type);
+            const right = this.expr_add();
+            left = {
+                type: 'binary_expr',
+                operator: operatorToken.type,
+                left,
+                right,
+            };
+        }
+        return left;
+    }
+
+    expr_add() {
+        let left = this.expr_mul();
+
+        while (['+', '-'].includes(this._lookahead.type)) {
+            const operatorToken = this._lookahead;
+            this._eat(operatorToken.type);
+            const right = this.expr_mul();
+            left = {
+                type: 'binary_expr',
+                operator: operatorToken.type,
+                left,
+                right,
+            };
+        }
+        return left;
+    }
+
+    expr_mul() {
+        let left = this.expr_un();
+
+        while (['*', '/', '%'].includes(this._lookahead.type)) {
+            const operatorToken = this._lookahead;
+            this._eat(operatorToken.type);
+            const right = this.expr_un();
+            left = {
+                type: 'binary_expr',
+                operator: operatorToken.type,
+                left,
+                right,
+            };
+        }
+        return left;
+    }
+
+    expr_un() {
+        if (['+', '-', 'não', '~'].includes(this._lookahead.type)) {
+            const operatorToken = this._lookahead;
+            this._eat(operatorToken.type);
+            const target = this.term();
+            return {
+                type: 'unary_expr',
+                operator: operatorToken.type,
+                target,
+            };
+        }
+        return this.term();
+    }
+
+    /**
+     * termo
+     *   : T_IDENTIFICADOR
+     *   | literal
+     *   | "(" expr ")"
+     *   ;
+     */
     term() {
-        if (this._lookahead.type === 'T_IDENTIFICADOR') {
+        if (['T_IDENTIFICADOR'].includes(this._lookahead.type)) {
             return this._eat('T_IDENTIFICADOR');
-        }
-
-        if (this._lookahead.type === 'T_INT_LIT') {
+        } else if (['T_INT_LIT', 'T_STRING_LIT'].includes(this._lookahead.type)) {
             return this.literal();
-        }
-
-        // Suporte a literais de string
-        if (this._lookahead.type === 'T_STRING_LIT') {
-            return this.literal();
-        }
-
-        if (this._lookahead.type === '(') {
+        } else if (this._lookahead.type === '(') {
             this._eat('(');
             const expr = this.expr();
             this._eat(')');
             return expr;
         }
-
         throw new Error(`Syntax Error: ${this._lookahead.type} not recognized as term`);
     }
 

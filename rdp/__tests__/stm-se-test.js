@@ -11,7 +11,7 @@ const program_sample = `
 `;
 
 module.exports = test => {
-    test(program_sample, {
+    test('statement SE (condicional)', program_sample, {
         type: 'algoritmo',
         declaracao_algoritmo: {
             name: 'teste',

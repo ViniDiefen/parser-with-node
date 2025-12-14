@@ -17,7 +17,7 @@ const program_sample = `
 `;
 
 module.exports = test => {
-    test(program_sample, {
+    test('programa completo', program_sample, {
         type: 'algoritmo',
         declaracao_algoritmo: {
             name: 'exemplo',

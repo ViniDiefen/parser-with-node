@@ -19,23 +19,26 @@ const tests = [
     { name: 'func-decl-multiplos-params-test', test: require('./func-decl-multiplos-params-test') },
     { name: 'func-decl-com-vars-test', test: require('./func-decl-com-vars-test') },
     { name: 'func-decl-multiplas-test', test: require('./func-decl-multiplas-test') },
-    { name: 'math-expressions-test', test: require('./math-expressions-test') },
+    { name: 'expressions-test', test: require('./expressions-test') },
 ]
 
 const parser = new Parser();
 
-function test(testName) {
-    return (input, expected) => {
+function test(testName, input, expected) {
+    try {
         const result = parser.parse(input);
         try {
             assert.deepStrictEqual(result, expected);
-            console.log(`Test "${testName}" passed`);
+            console.log(`✓ ${testName}`);
         } catch (e) {
-            console.error(`Test "${testName}" failed`);
+            console.error(`✗ ${testName}`);
             console.error(e.message);
         }
-    };
+    } catch (e) {
+        console.error(`✗ ${testName} (parsing error)`);
+        console.error(e.message);
+    }
 }
 
 // Run all tests
-tests.forEach(({ name, test: testFn }) => testFn(test(name)));
+tests.forEach(({ test: testFn }) => testFn(test));

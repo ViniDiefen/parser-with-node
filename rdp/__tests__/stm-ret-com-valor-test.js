@@ -6,7 +6,7 @@ const program_sample = `
 `;
 
 module.exports = test => {
-    test(program_sample, {
+    test('retorno com valor', program_sample, {
         type: 'algoritmo',
         declaracao_algoritmo: {
             name: 'teste',

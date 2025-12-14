@@ -6,7 +6,7 @@ const program_sample = `
 `;
 
 module.exports = test => {
-    test(program_sample, {
+    test('chamada de função sem argumentos', program_sample, {
         type: 'algoritmo',
         declaracao_algoritmo: {
             name: 'teste',

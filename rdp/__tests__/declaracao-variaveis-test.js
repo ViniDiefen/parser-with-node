@@ -9,7 +9,7 @@ const program_sample = `
 `;
 
 module.exports = test => {
-    test(program_sample, {
+    test('declaração de variáveis simples', program_sample, {
         type: 'algoritmo',
         declaracao_algoritmo: {
             name: 'exemplo',

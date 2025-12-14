@@ -97,9 +97,13 @@ stm_para
 ;
 
 expr
-: expr ("+" | "-") expr
-| expr ("/" | "*") expr
-| termo
+: expr ("ou"|"||") expr
+| expr ("e"|"&&") expr
+| expr ("=="|"<>") expr
+| expr (">"|">="|"<"|"<=") expr
+| expr ("+" | "-") expr
+| expr ("/"|"*"|"%") expr
+| ("+"|"-"|"~"|"não")? termo
 ;
 
 termo
